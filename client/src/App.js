@@ -1,11 +1,17 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import useRoutes from './routes';
 
-function App() {
+const App = () => {
+  const routes = useRoutes(true);
+
   return (
-    <div className="App">
-      <h1>hello</h1>
-    </div>
+    <BrowserRouter>
+      <div className="container">
+        {routes}
+      </div>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
