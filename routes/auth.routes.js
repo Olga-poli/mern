@@ -1,4 +1,3 @@
-// const { RESPONSE_MESSAGE } = require('../constants');
 const { Router } = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -6,41 +5,32 @@ const { check, validationResult } = require('express-validator');
 const User = require('../models/User');
 const config = require('../config/default.json');
 const router = Router();
-
-const RESPONSE_MESSAGE = {
-  ERROR: {
-    IS_EMAIL: 'Must be email',
-    PASSWORD_LENGTH: 'Must be longer then 1 symbol',
-    PASSWORD_EXIST: 'Enter password',
-    INCORRECT_DATA: 'Incorrect input data',
-    INCORRECT_PASSWORD: 'Incorrect password',
-    USER_ALREADY_EXIST: 'Such user already exist',
-    USER_DOESNT_EXIST: 'User doesn\t exist',
-    SERVER_ERROR: 'Something gone wrong, try again',
-  },
-  SUCCESS: {
-    USER_CREATED: 'User successfully created',
-  }
-};
+const {
+  AppError,
+  ValidationError,
+  UserAlreadyExistError,
+  UserNotFoundError,
+  WrongPasswordError,
+} = require('../models/errors/AppError');
 
 // /api/auth/register
 router.post('/register',
   [
-    check('email', RESPONSE_MESSAGE.ERROR.IS_EMAIL).isEmail,
-    check('password', RESPONSE_MESSAGE.ERROR.PASSWORD_LENGTH).isLength({ min: 1 }),
+    check('email', 'Must be email').isEmail,
+    check('password', 'Must be longer then 1 symbol').isLength({ min: 1 }),
   ],
   async (request, response) => {
   try {
     const validationErrors = validationResult(request);
     if (!validationErrors.isEmpty()) {
-      return response.status(400).json({ errors: validationErrors.array(), message: RESPONSE_MESSAGE.ERROR.INCORRECT_DATA });
+      throw new ValidationError(validationErrors);
     }
 
     const {email, password} = request.body;
     const candidate = await User.findOne({ email: email });
 
     if (candidate) {
-      return response.status(400).json({ message: RESPONSE_MESSAGE.ERROR.USER_ALREADY_EXIST });
+      throw new UserAlreadyExistError();
     }
 
     const hashedPassword = await bcrypt.hash(password);
@@ -48,37 +38,41 @@ router.post('/register',
 
     await user.save();
 
-    return response.status(201).json({ message: RESPONSE_MESSAGE.SUCCESS.USER_CREATED });
+    return response.status(201).json({ message: 'User successfully created' });
 
   } catch (error) {
-    response.status(500).json({message: RESPONSE_MESSAGE.ERROR.SERVER_ERROR})
+    if (error instanceof AppError) {
+      return response.status(error.code).json({ ...error });
+    } else {
+      response.status(500).json({message: 'Something gone wrong, try again' })
+    }
   }
 });
 
 // /api/auth/login
 router.post('/login',
   [
-    check('email', RESPONSE_MESSAGE.ERROR.IS_EMAIL).normalizeEmail().isEmail,
-    check('password', RESPONSE_MESSAGE.ERROR.PASSWORD_EXIST).exists(),
+    check('email', 'Must be email').normalizeEmail().isEmail,
+    check('password', 'Enter password').exists(),
   ],
   async (request, response) => {
   try {
     const validationErrors = validationResult(request);
     if (!validationErrors.isEmpty()) {
-      return response.status(400).json({ errors: validationErrors.array(), message: RESPONSE_MESSAGE.ERROR.INCORRECT_DATA });
+      throw new ValidationError(validationErrors);
     }
 
     const {email, password} = request.body;
     const user = User.findOne({ email });
 
     if (!user) {
-      return response.status(400).json({ message: RESPONSE_MESSAGE.ERROR.USER_DOESNT_EXIST});
+      throw new UserNotFoundError();
     }
 
     const isMatch = bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return response.status(400).json({ message: RESPONSE_MESSAGE.ERROR.INCORRECT_PASSWORD });
+      throw new WrongPasswordError();
     }
 
     const token = jwt.sign(
@@ -90,7 +84,11 @@ router.post('/login',
     return response.json({ token, userId: user.id });
 
   } catch (error) {
-    response.status(500).json({message: RESPONSE_MESSAGE.ERROR.SERVER_ERROR})
+    if (error instanceof AppError) {
+      return response.status(error.code).json({ ...error });
+    } else {
+      return response.status(500).json({message: 'Something gone wrong, try again'});
+    }
   }
 });
 

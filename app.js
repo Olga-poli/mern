@@ -3,7 +3,7 @@ const config = require('config');
 const mongoose = require('mongoose');
 
 const app = express();
-const PORT = config.get('port') || 3000;
+const PORT = config.get('port') || 5001;
 
 app.use('/api/auth', require('./routes/auth.routes'));
 
@@ -19,8 +19,6 @@ const start = async () => {
     console.log('Server Error', error.message);
     process.exit(1);
   }
-}
-
-
+};
 
 start();
