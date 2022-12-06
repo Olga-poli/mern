@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@headlessui/react": "^1.7.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.0",
     "react-router-dom": "^6.4.4",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
@@ -18,6 +20,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "http://localhost:5001/",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -26,6 +29,13 @@
       "airbnb/hooks"
     ],
     "rules": {
+      "jsx-a11y/label-has-associated-control": ["off", {
+        "labelComponents": [],
+        "labelAttributes": [],
+        "controlComponents": [],
+        "assert": "both"
+      }],
+      "no-param-reassign": 0,
       "react/jsx-filename-extension": [
         1,
         {
@@ -67,8 +77,11 @@
     ]
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.13",
     "eslint": "^8.28.0",
     "eslint-config-airbnb": "^19.0.4",
-    "husky": "^8.0.2"
+    "husky": "^8.0.2",
+    "postcss": "^8.4.19",
+    "tailwindcss": "^3.2.4"
   }
 }

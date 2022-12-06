@@ -6,8 +6,9 @@ class AppError extends Error {
 
 class ValidationError extends AppError {
   constructor(validationObject) {
-    super('Incorrect input data');
+    super();
     this.code = 400;
+    this.message = 'Incorrect input data';
     this.errors = validationObject.array();
   }
 }
