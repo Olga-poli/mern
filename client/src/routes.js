@@ -9,7 +9,7 @@ const useRoutes = (isAuthorized) => {
     return (
       <Routes>
         <Route path="/links" element={<LinksPage />} />
-        <Route path="/create" element={<CreatePage />} />
+        <Route path="/*" element={<CreatePage />} />
       </Routes>
     );
   }

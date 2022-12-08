@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAPIHook } from '../hooks/useAPI.hook';
 import Spinner from '../components/Spinner';
+import useAuth from '../hooks/useAuth.hook';
 
 const AuthPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const { isLoading, request } = useAPIHook();
+  const { login } = useAuth();
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -13,13 +15,16 @@ const AuthPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const action = event.target.name;
 
     try {
       const response = await request(
-        `/api/auth/${event.target.name}`,
+        `/api/auth/${action}`,
         'POST',
         { ...form }
       );
+
+      login(response);
       toast.success(response.message || 'Success');
     } catch (error) {
       toast.error(error.message || 'Something went wrong, try again');

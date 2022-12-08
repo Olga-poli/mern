@@ -1,10 +1,12 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import useRoutes from './routes';
 import Toast from './components/Toast';
 
 const App = () => {
-  const routes = useRoutes(false);
+  const isAuthenticated = useSelector((state) => state.authReducer.isAuthenticated);
+  const routes = useRoutes(isAuthenticated);
 
   return (
     <BrowserRouter>
