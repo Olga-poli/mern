@@ -21,7 +21,7 @@ const useAuth = () => {
     const newUserData = { userId: null, token: null };
     setUser(newUserData);
 
-    dispatch(setUserAuthorization(!!token));
+    dispatch(setUserAuthorization(!!newUserData.token));
     localStorage.removeItem(storageName);
   }, [user]);
 
@@ -31,7 +31,7 @@ const useAuth = () => {
     if(userData && userData.token) {
       login(userData)
     }
-  }, [login]);
+  }, []);
 
   return { login, logout };
 };
