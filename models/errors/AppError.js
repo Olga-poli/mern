@@ -39,4 +39,10 @@ class WrongPasswordError extends CustomError {
   }
 }
 
-module.exports = { AppError, ValidationError, UserAlreadyExistError, UserNotFoundError, WrongPasswordError };
+module.exports = {
+  AppError,
+  ValidationError,
+  UserAlreadyExistError,
+  UserNotFoundError,
+  WrongPasswordError,
+};
