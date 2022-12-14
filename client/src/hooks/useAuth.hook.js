@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useDispatch } from 'react-redux';
 import { useCallback, useEffect, useState } from 'react';
 import { setUserAuthorization } from '../store/slices/auth.slice';
@@ -9,7 +8,7 @@ const useAuth = () => {
   const [user, setUser] = useState({ userId: null, token: null });
   const dispatch = useDispatch();
 
-  const login = useCallback(({ userId, token  }) => {
+  const login = useCallback(({ userId, token }) => {
     const newUserData = { userId, token };
     setUser(newUserData);
 
@@ -28,8 +27,8 @@ const useAuth = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem(storageName));
 
-    if(userData && userData.token) {
-      login(userData)
+    if (userData && userData.token) {
+      login(userData);
     }
   }, []);
 

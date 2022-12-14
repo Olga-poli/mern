@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth.hook';
 
 const Navbar = () => {
   const { logout } = useAuth();
+  const navigate = useNavigate();
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
   const handleMenuToggle = () => {
@@ -14,6 +15,7 @@ const Navbar = () => {
   const handleLogout = (event) => {
     event.preventDefault();
     logout();
+    navigate('/');
   };
 
   return (
@@ -22,15 +24,29 @@ const Navbar = () => {
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex flex-shrink-0 items-center">
-              <p className="text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">App</p>
+              <NavLink to="/" className="text-indigo-600 px-3 py-2 rounded-md text-sm font-bold" aria-current="page">Home</NavLink>
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                <NavLink href="/" className="bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Create</NavLink>
+                <NavLink
+                  to="/create"
+                  className={
+                    ({ isActive }) => `px-3 py-2 rounded-md text-sm font-medium ${isActive ? 'bg-gray-700 text-white' : 'text-gray-700'}`
+                  }
+                  aria-current="page"
+                >
+                  Create
+                </NavLink>
 
-                <NavLink href="/" className="text-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Links</NavLink>
+                <NavLink
+                  to="/links"
+                  className={
+                   ({ isActive }) => `px-3 py-2 rounded-md text-sm font-medium ${isActive ? 'bg-gray-700 text-white' : 'text-gray-700'}`
+                  }
+                >
+                  Links
+                </NavLink>
 
-                <NavLink href="/" className="text-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Projects</NavLink>
               </div>
             </div>
           </div>

@@ -4,11 +4,12 @@ import LinksPage from './pages/LinksPage';
 import AuthPage from './pages/AuthPage';
 import CreatePage from './pages/CreatePage';
 
-const useRoutes = (isAuthorized) => {
-  if (isAuthorized) {
+const useRoutes = (isAuthenticated) => {
+  if (isAuthenticated) {
     return (
       <Routes>
         <Route path="/links" element={<LinksPage />} />
+        <Route path="/create" element={<CreatePage />} />
         <Route path="/" element={<CreatePage />} />
       </Routes>
     );

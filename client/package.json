@@ -42,6 +42,7 @@
         }
       ],
       "no-param-reassign": 0,
+      "react-hooks/exhaustive-deps": "warn",
       "react/jsx-filename-extension": [
         1,
         {
